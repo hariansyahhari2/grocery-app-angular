@@ -24,6 +24,7 @@ app.config(function ($routeProvider, $locationProvider) {
 })
 
 app.controller('HomeController', ['$scope', 'GroceryService', function ($scope, GroceryService) {
+    $scope.appTitle = "Grocery List App"
     $scope.groceryItems = GroceryService.groceryItems;
 }])
 
@@ -62,29 +63,28 @@ app.service('GroceryService', function () {
     }
 
     groceryService.save = function (entry) {
-        if (entry.id === null) {
+        var updatedItem = groceryService.findById(entry.id);
+
+        if (updatedItem) {
+            updatedItem.completed = entry.completed;
+            updatedItem.itemName = entry.itemName;
+            updatedItem.date = entry.date;
+        } else {
             entry.id = groceryService.getNewId();
             groceryService.groceryItems.push(entry);
-        } else {
-            for (var item in groceryService.groceryItems) {
-                if (groceryService.groceryItems[item].id === entry.id) {
-                    groceryService.groceryItems[item] = entry;
-                    return
-                }
-            }
         }
     }
 
     return groceryService;
 })
 
-app.controller('GroceryListItemsController', ['$scope', '$routeParams', '$location', 'GroceryService', function ($scope, $routeParams, $location, GroceryService) {
+app.controller('GroceryListItemsController', ['$scope', '$http', '$routeParams', '$location', 'GroceryService', function ($scope, $http, $routeParams, $location, GroceryService) {
     $scope.modeTitle = $routeParams.id ? 'Edit' : 'Add';
 
     if (!$routeParams.id) {
         $scope.groceryItem = {id: null, completed: false, itemName: '', date: `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`};
     } else {
-        $scope.groceryItem = GroceryService.findById(parseInt($routeParams.id));
+        $scope.groceryItem = _.clone(GroceryService.findById(parseInt($routeParams.id)));
         if($scope.groceryItem === undefined) {
             $location.path('/');
         }

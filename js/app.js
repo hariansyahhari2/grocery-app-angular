@@ -75,6 +75,12 @@ app.service('GroceryService', function () {
         }
     }
 
+    groceryService.remove = function (item) {
+        var index = groceryService.groceryItems.indexOf(item);
+
+        groceryService.groceryItems.splice(index, 1);
+    }
+
     return groceryService;
 })
 
@@ -95,5 +101,7 @@ app.controller('GroceryListItemsController', ['$scope', '$http', '$routeParams',
         $location.path('/');
     }
 
-    console.log($scope.groceryItems)
+    $scope.removeById = function (item) {
+        GroceryService.remove(item);
+    }
 }])

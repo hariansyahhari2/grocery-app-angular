@@ -9,6 +9,9 @@
                 <span class="glyphicon glyphicon-unchecked"></span>
             </button>
             <span style="font-weight: bold; font-size: large">{{ item.itemName | uppercase}}</span>
+            <button type="button" class="btn btn-sm btn-danger pull-right" ng-click="removeById(item)">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
             <a href="#/input-item/edit/{{item.id}}" class="btn btn-sm btn-success pull-right">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>
